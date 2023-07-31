@@ -1,7 +1,8 @@
 package com.engeto.project2.project2_story.controllers;
 
 import com.engeto.project2.project2_story.model.User;
-import com.engeto.project2.project2_story.services.UserRepository;
+import com.engeto.project2.project2_story.model.UserNonDetailed;
+import com.engeto.project2.project2_story.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,18 +17,19 @@ public class MainController {
     @Autowired
     UserRepository userRepository;
 
+    // kontrola, jestli aplikace funguje
+    @GetMapping("/check")
+    public String check() {
+        return "Welcome to registration system";
+    }
+
 //    založení nového uživatele
     // personID musí být ověřeno, že je validní. Zde máš k dispozici soubor, ve kterém jsou po řádcích napsané validní personID
     // Dále je nutné ověřit, zda již uživatel s personID není v databázi.
-
-
-    // UUID - Generování
-    // Pro každý nový záznam musí být vygenerovaný ještě UUID, což bude další jedinečný identifikátor uživatele.
-    // Na vygenerování můžeš použít například následující knihovnu (https://www.baeldung.com/java-uuid).
     @PostMapping("/user")
     public ResponseEntity<String> createUser(@RequestBody User user) {
         try {
-            userRepository.addUser(new User(user.getName(), user.getSurname(), user.getPersonID(), user.getUuid()));
+            userRepository.createUser(new User(user.getName(), user.getSurname(), user.getPersonID()));
             return new ResponseEntity<>("User was created successfully.", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -36,14 +38,12 @@ public class MainController {
 
 //    informace o uživateli
 
-    //ještě existuje varianta api/v1/users/{ID}?detail=true
-    //Kdy request vrátí rozšířený objekt:
-    //
-    //Ukázka kódu3
-    //{id: string, name: string, surname: string, personID: string , uuid: string  }
+    // ještě existuje varianta api/v1/users/{ID}?detail=true
+    // Kdy request vrátí rozšířený objekt:
+    // {id: string, name: string, surname: string, personID: string , uuid: string
     @GetMapping("/user/{ID}")
-    public ResponseEntity<User> getUserById(@PathVariable("ID") Long ID) {
-        User user = userRepository.selectOneUserByID(ID);
+    public ResponseEntity<Object> getUserById(@PathVariable("ID") Long ID, @RequestParam(required = false) boolean detail) {
+        Object user = userRepository.selectUserByID(ID, detail);
 
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
@@ -55,18 +55,16 @@ public class MainController {
     //    informace o všech uživatelích
     // ještě existuje varianta api/v1/users?detail=true
     // Kdy request vrátí rozšířený objekt:
-    //
-    // Ukázka kódu5
     // {id: string, name: string, surname: string, personID: string , uuid: string
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false) String name) {
+    public ResponseEntity<List<Object>> getAllUsers(@RequestParam(required = false) String name, boolean detail) {
         try {
-            List<User> users = new ArrayList<User>();
+            List<Object> users = new ArrayList<>();
 
             if (name == null)
-                userRepository.selectAllUsers().forEach(users::add);
+                users.addAll(userRepository.selectAllUsers(detail));
             else
-                userRepository.findByNameContaining(name).forEach(users::add);
+                users.addAll(userRepository.findByNameContaining(name, detail));
 
             if (users.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -81,19 +79,26 @@ public class MainController {
     //    upravit informace o uživateli
     // Z toho tedy je jasné, že je možné upravit pouze name a surname
     @PutMapping("/user/{ID}")
-    public ResponseEntity<String> updateUser(@PathVariable("ID") Long ID, @RequestBody User user) {
-        User userToUpdate = userRepository.selectOneUserByID(ID);
+    public ResponseEntity<String> updateUser(@PathVariable("ID") Long ID, @RequestBody User user, @RequestParam(required = false) boolean detail) {
+        Object userToUpdateObject = userRepository.selectUserByID(ID, detail);
 
-        if (userToUpdate != null) {
+        if (userToUpdateObject instanceof User userToUpdate) {
             userToUpdate.setName(user.getName());
             userToUpdate.setSurname(user.getSurname());
 
             userRepository.updateUser(userToUpdate);
             return new ResponseEntity<>("User was updated successfully.", HttpStatus.OK);
+        } else if (userToUpdateObject instanceof UserNonDetailed userNonDetailedToUpdate) {
+            userNonDetailedToUpdate.setName(user.getName());
+            userNonDetailedToUpdate.setSurname(user.getSurname());
+
+            userRepository.updateUser(userNonDetailedToUpdate);
+            return new ResponseEntity<>("User was updated successfully.", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Cannot find user with ID=" + ID, HttpStatus.NOT_FOUND);
         }
     }
+
 
     //    smazat uživatele
     @DeleteMapping("/user/{ID}")

@@ -1,6 +1,14 @@
 package com.engeto.project2.project2_story.model;
 
+import java.util.UUID;
+
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
 public class User {
+
 
     private Long ID;
 
@@ -9,25 +17,32 @@ public class User {
     private String surname;
 
     private String personID;
-    private String uuid;
 
-    public User(Long id, String name, String surname, String personID, String uuid) {
+    // UUID - Generování
+    // Pro každý nový záznam musí být vygenerovaný ještě UUID, což bude další jedinečný identifikátor uživatele.
+    private byte[] uuid;
+
+
+
+    public User(Long id, String name, String surname, String personID, byte[] uuid) {
         this.ID = id;
         this.name = name;
         this.surname = surname;
         this.personID = personID;
-        this.uuid = uuid;
+        this.uuid = uuid;  // Generování náhodného UUID
     }
 
-    public User(String name, String surname, String personID, String uuid) {
+    public User(String name, String surname, String personID) {
         this.name = name;
         this.surname = surname;
         this.personID = personID;
-        this.uuid = uuid;
     }
-
     public User() {
     }
+
+
+
+
     public Long getID() {
         return ID;
     }
@@ -60,11 +75,11 @@ public class User {
         this.personID = personID;
     }
 
-    public String getUuid() {
+    public byte[] getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(byte[] uuid) {
         this.uuid = uuid;
     }
 
