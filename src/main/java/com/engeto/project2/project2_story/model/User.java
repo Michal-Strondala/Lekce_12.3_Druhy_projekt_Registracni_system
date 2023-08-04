@@ -1,23 +1,14 @@
 package com.engeto.project2.project2_story.model;
 
-import java.util.UUID;
 
-import jakarta.annotation.Nonnull;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonView;
 
 public class User {
 
-
     private Long ID;
-
     private String name;
-
     private String surname;
-
     private String personID;
-
     // UUID - Generování
     // Pro každý nový záznam musí být vygenerovaný ještě UUID, což bude další jedinečný identifikátor uživatele.
     private byte[] uuid;
@@ -41,8 +32,13 @@ public class User {
     }
 
 
+    public boolean isPersonIDValid() {
+        if (this.personID.length() == 12) return true;
+        return false;
+    }
 
 
+    @JsonView(Views.Public.class)
     public Long getID() {
         return ID;
     }
@@ -50,7 +46,7 @@ public class User {
     public void setID(Long ID) {
         this.ID = ID;
     }
-
+    @JsonView(Views.Public.class)
     public String getName() {
         return name;
     }
@@ -58,7 +54,7 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
-
+    @JsonView(Views.Public.class)
     public String getSurname() {
         return surname;
     }
@@ -67,14 +63,20 @@ public class User {
         this.surname = surname;
     }
 
+    @JsonView(Views.Public.class)
     public String getPersonID() {
-        return personID;
+        if (isPersonIDValid()) {
+            return personID;
+        } else {
+            return "The personID is not valid! The length has to be 12 characters";
+        }
     }
 
     public void setPersonID(String personID) {
-        this.personID = personID;
+        if (personID.length() == 12)
+            this.personID = personID;
     }
-
+    @JsonView(Views.Public.class)
     public byte[] getUuid() {
         return uuid;
     }

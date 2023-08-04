@@ -1,8 +1,10 @@
 package com.engeto.project2.project2_story.controllers;
 
 import com.engeto.project2.project2_story.model.User;
-import com.engeto.project2.project2_story.model.UserNonDetailed;
-import com.engeto.project2.project2_story.repositories.UserRepository;
+import com.engeto.project2.project2_story.model.UserNonDetailedResponse;
+import com.engeto.project2.project2_story.model.Views;
+import com.engeto.project2.project2_story.services.UserService;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class MainController {
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     // kontrola, jestli aplikace funguje
     @GetMapping("/check")
@@ -29,7 +31,7 @@ public class MainController {
     @PostMapping("/user")
     public ResponseEntity<String> createUser(@RequestBody User user) {
         try {
-            userRepository.createUser(new User(user.getName(), user.getSurname(), user.getPersonID()));
+            userService.createUser(new User(user.getName(), user.getSurname(), user.getPersonID()));
             return new ResponseEntity<>("User was created successfully.", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -42,8 +44,9 @@ public class MainController {
     // Kdy request vrátí rozšířený objekt:
     // {id: string, name: string, surname: string, personID: string , uuid: string
     @GetMapping("/user/{ID}")
+    @JsonView(Views.Public.class)
     public ResponseEntity<Object> getUserById(@PathVariable("ID") Long ID, @RequestParam(required = false) boolean detail) {
-        Object user = userRepository.selectUserByID(ID, detail);
+        Object user = userService.selectUserByID(ID, detail);
 
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
@@ -57,14 +60,15 @@ public class MainController {
     // Kdy request vrátí rozšířený objekt:
     // {id: string, name: string, surname: string, personID: string , uuid: string
     @GetMapping("/users")
+    @JsonView(Views.Public.class)
     public ResponseEntity<List<Object>> getAllUsers(@RequestParam(required = false) String name, boolean detail) {
         try {
             List<Object> users = new ArrayList<>();
 
             if (name == null)
-                users.addAll(userRepository.selectAllUsers(detail));
+                users.addAll(userService.selectAllUsers(detail));
             else
-                users.addAll(userRepository.findByNameContaining(name, detail));
+                users.addAll(userService.findByNameContaining(name, detail));
 
             if (users.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -80,19 +84,19 @@ public class MainController {
     // Z toho tedy je jasné, že je možné upravit pouze name a surname
     @PutMapping("/user/{ID}")
     public ResponseEntity<String> updateUser(@PathVariable("ID") Long ID, @RequestBody User user, @RequestParam(required = false) boolean detail) {
-        Object userToUpdateObject = userRepository.selectUserByID(ID, detail);
+        Object userToUpdateObject = userService.selectUserByID(ID, detail);
 
         if (userToUpdateObject instanceof User userToUpdate) {
             userToUpdate.setName(user.getName());
             userToUpdate.setSurname(user.getSurname());
 
-            userRepository.updateUser(userToUpdate);
+            userService.updateUser(userToUpdate);
             return new ResponseEntity<>("User was updated successfully.", HttpStatus.OK);
-        } else if (userToUpdateObject instanceof UserNonDetailed userNonDetailedToUpdate) {
-            userNonDetailedToUpdate.setName(user.getName());
-            userNonDetailedToUpdate.setSurname(user.getSurname());
+        } else if (userToUpdateObject instanceof UserNonDetailedResponse userNonDetailedResponseToUpdate) {
+            userNonDetailedResponseToUpdate.setName(user.getName());
+            userNonDetailedResponseToUpdate.setSurname(user.getSurname());
 
-            userRepository.updateUser(userNonDetailedToUpdate);
+            userService.updateUser(userNonDetailedResponseToUpdate);
             return new ResponseEntity<>("User was updated successfully.", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Cannot find user with ID=" + ID, HttpStatus.NOT_FOUND);
@@ -104,7 +108,7 @@ public class MainController {
     @DeleteMapping("/user/{ID}")
     public ResponseEntity<String> deleteUser(@PathVariable("ID") Long ID) {
         try {
-            int result = userRepository.deleteUserByID(ID);
+            int result = userService.deleteUserByID(ID);
             if (result == 0) {
                 return new ResponseEntity<>("Cannot find user with ID=" + ID, HttpStatus.OK);
             }

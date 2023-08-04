@@ -1,19 +1,21 @@
 package com.engeto.project2.project2_story.model;
 
-public class UserNonDetailed {
+import com.fasterxml.jackson.annotation.JsonView;
+
+public class UserNonDetailedResponse {
     private Long ID;
     private String name;
     private String surname;
 
-    public UserNonDetailed(Long ID, String name, String surname) {
+    public UserNonDetailedResponse(Long ID, String name, String surname) {
         this.ID = ID;
         this.name = name;
         this.surname = surname;
     }
 
-    public UserNonDetailed() {
+    public UserNonDetailedResponse() {
     }
-
+    @JsonView(Views.Public.class)
     public Long getID() {
         return ID;
     }
@@ -21,7 +23,7 @@ public class UserNonDetailed {
     public void setID(Long ID) {
         this.ID = ID;
     }
-
+    @JsonView(Views.Public.class)
     public String getName() {
         return name;
     }
@@ -29,7 +31,7 @@ public class UserNonDetailed {
     public void setName(String name) {
         this.name = name;
     }
-
+    @JsonView(Views.Public.class)
     public String getSurname() {
         return surname;
     }

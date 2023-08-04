@@ -1,10 +1,10 @@
-package com.engeto.project2.project2_story.repositories;
+package com.engeto.project2.project2_story.services;
 
 import com.engeto.project2.project2_story.model.User;
 
 import java.util.List;
 
-public interface UserRepository {
+public interface UserService {
 
 
 //    založení nového uživatele
@@ -26,5 +26,5 @@ public interface UserRepository {
     int deleteUserByID(Long ID);
 
     // najít uživatele podle jména
-    List<User> findByNameContaining(String name, boolean detail);
+    List<Object> findByNameContaining(String name, boolean detail);
 }
