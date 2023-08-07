@@ -28,15 +28,12 @@ public class User {
         this.surname = surname;
         this.personID = personID;
     }
+    public User(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+    }
     public User() {
     }
-
-
-    public boolean isPersonIDValid() {
-        if (this.personID.length() == 12) return true;
-        return false;
-    }
-
 
     @JsonView(Views.Public.class)
     public Long getID() {
@@ -65,17 +62,14 @@ public class User {
 
     @JsonView(Views.Public.class)
     public String getPersonID() {
-        if (isPersonIDValid()) {
-            return personID;
-        } else {
-            return "The personID is not valid! The length has to be 12 characters";
-        }
+        return personID;
     }
 
     public void setPersonID(String personID) {
         if (personID.length() == 12)
             this.personID = personID;
     }
+
     @JsonView(Views.Public.class)
     public byte[] getUuid() {
         return uuid;

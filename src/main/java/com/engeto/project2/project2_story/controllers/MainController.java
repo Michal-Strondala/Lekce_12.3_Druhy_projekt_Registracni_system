@@ -30,16 +30,18 @@ public class MainController {
     // Dále je nutné ověřit, zda již uživatel s personID není v databázi.
     @PostMapping("/user")
     public ResponseEntity<String> createUser(@RequestBody User user) {
-        try {
-            userService.createUser(new User(user.getName(), user.getSurname(), user.getPersonID()));
+        int result = userService.createUser(user);
+
+        if (result == 1) {
             return new ResponseEntity<>("User was created successfully.", HttpStatus.CREATED);
-        } catch (Exception e) {
+        } else if (result == 0) {
+            return new ResponseEntity<>("No valid personID found or already in the database.", HttpStatus.BAD_REQUEST);
+        } else {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 //    informace o uživateli
-
     // ještě existuje varianta api/v1/users/{ID}?detail=true
     // Kdy request vrátí rozšířený objekt:
     // {id: string, name: string, surname: string, personID: string , uuid: string
