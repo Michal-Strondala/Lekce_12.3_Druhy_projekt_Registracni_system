@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
+
+    // Vytvoření uživatele
     const createUserButton = document.getElementById("createUserButton");
     createUserButton.addEventListener("click", createUser);
 
@@ -37,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     }
 
-
+    // Smazání uživatele
     const deleteUserButton = document.getElementById("deleteUserButton");
     deleteUserButton.addEventListener("click", deleteUser);
 
@@ -75,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     }
 
+    // Úpravy uživatele
     const updateUserButton = document.getElementById("updateUserButton");
     updateUserButton.addEventListener("click", updateUser);
 
@@ -116,6 +119,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     }
 
+    // Zobrazení informací o uživateli
     const showUserButton = document.getElementById("showUserButton");
     showUserButton.addEventListener("click", showUserByID);
 
@@ -180,7 +184,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     }
 
-
+    // Zobrazení informací o všech uživatelích
     const showUsersButton = document.getElementById("showUsersButton");
     showUsersButton.addEventListener("click", showUsers);
 

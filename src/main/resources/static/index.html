@@ -9,6 +9,7 @@
 
     <h1>Genesis Resources - Registration System</h1>
 
+    <!--region Vytvoření uživatele-->
     <div>
     <form id="userForm">
         <label for="name">Name:</label>
@@ -21,7 +22,9 @@
     </div>
 
     <div id="resultOfCreation"></div><br/>
+    <!--endregion-->
 
+<!--    region Smazání uživatele-->
     <div>
         <label for="deleteUserID">Delete User by ID:</label>
         <input type="text" id="deleteUserID" placeholder="Enter ID"/><br/>
@@ -29,7 +32,9 @@
     </div>
 
     <div id="resultOfDeletion"></div><br/>
+    <!--endregion-->
 
+<!--    region Úpravy uživatele-->
     <div>
         <label for="updateUserWithID">Update User with ID:</label>
         <input type="text" id="updateUserWithID" placeholder="Enter ID"/><br/>
@@ -44,7 +49,9 @@
     </div>
 
     <div id="resultOfUpdate"></div><br/>
+<!--    endregion-->
 
+<!--    region Zobrazení informací o uživateli-->
     <div>
         <label for="showUserByID">Show User by ID:</label>
         <input type="text" id="showUserByID" placeholder="Enter ID"/><br/>
@@ -53,7 +60,9 @@
     </div>
 
     <div id="resultOfShowUserByID"></div><br/>
+<!--    endregion-->
 
+<!--    region Zobrazení informací o všech uživatelích-->
     <div>
         <h2>Show All Users:</h2>
         <button id="showUsersButton">Show Users</button>
@@ -61,7 +70,7 @@
     </div>
 
     <div id="resultOfShowUsers"></div><br/>
-
+<!--    endregion-->
 
 </body>
 </html>
