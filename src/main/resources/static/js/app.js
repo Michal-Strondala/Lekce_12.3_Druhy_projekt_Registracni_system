@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(error => {
             console.error("Error", error);
             const resultDiv = document.getElementById("resultOfDeletion");
-            resultDiv.innerText = "User deletion failed";
+            resultDiv.innerText = `User deletion failed. Cannot find user with ID = ${deleteUserID}`;
         });
 
     }
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (response.ok) {
                 return response.text();
             } else {
-                throw new Error("User update failed. User was not found");
+                throw new Error("User update failed");
             }
         })
         .then(data => {
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(error => {
             console.error("Error", error);
             const resultDiv = document.getElementById("resultOfUpdate");
-            resultDiv.innerText = "User update failed. User was not found";
+            resultDiv.innerText = `User update failed. Cannot find user with ID = ${updateUserWithID}`;
         });
 
     }
@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(error => {
             console.error("Error", error);
             const resultDiv = document.getElementById("resultOfShowUserByID");
-            resultDiv.innerText = "User not found";
+            resultDiv.innerText = `Cannot find user with ID = ${showUserByID}`;
         });
 
     }
