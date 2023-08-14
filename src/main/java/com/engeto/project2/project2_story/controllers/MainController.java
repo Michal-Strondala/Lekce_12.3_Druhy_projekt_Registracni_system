@@ -19,11 +19,6 @@ public class MainController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
-
     // kontrola, jestli aplikace funguje
     @GetMapping("/check")
     public String check() {

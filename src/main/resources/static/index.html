@@ -1,119 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <meta charset="UTF-8">
     <title>My First Spring Boot Website</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" >
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="col-9 mx-auto p-8 text-center mt-4">
-                <h1 class="mb-4">Genesis Resources - Registration System</h1>
+    <div class="container">
+        <div class="row">
+                <div class="col-12 col-md-9 mx-auto p-8 text-center mt-4">
+                    <h1 class="mb-4 p-3">Genesis Resources - Registration System</h1>
+                </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-3 mx-auto">
+                <!--region Vytvoření uživatele-->
+                <div class="bg-body-tertiary rounded alt=3 p-3">
+                    <p class="text fs-5 fw-bolder">Create user:</p>
+                    <form id="userForm">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name:</label>
+                            <input type="text" class="form-control form-control-sm" id="name" name="name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="surname" class="form-label">Surname:</label>
+                            <input type="text" class="form-control form-control-sm" id="surname" name="surname">
+                        </div>
+                    </form>
+                    <button class="btn btn-success" id="createUserButton">Register User</button><br/>
+                </div>
+
+                <div class="p-3 mb-3" id="resultOfCreation"></div><br/>
+                <!--endregion-->
+                <!--    region Smazání uživatele-->
+                <div class="bg-body-tertiary rounded alt=3 p-3">
+                    <label for="deleteUserID" class="form-label fs-5 fw-bolder">Delete User by ID:</label>
+                    <input type="text" class="form-control form-control-sm" id="deleteUserID" placeholder="Enter ID"/><br/>
+                    <button class="btn btn-danger" id="deleteUserButton">Delete User</button><br/>
+                </div>
+
+                <div class="p-3 mb-3" id="resultOfDeletion"></div><br/>
+                <!--endregion-->
+                <!--    region Úpravy uživatele-->
+                <div class="bg-body-tertiary rounded alt=3 p-3">
+                    <label for="updateUserWithID" class="form-label fs-5 fw-bolder">Update User with ID:</label>
+                    <input type="text" class="form-control form-control-sm mb-3" id="updateUserWithID" placeholder="Enter ID">
+                    <form id="updateUserForm">
+                        <div>
+                            <label for="newName" class="form-label">New name:</label>
+                            <input type="text" class="form-control form-control-sm" id="newName" name="newName"/><br/>
+                        </div>
+                        <div class="mb-1">
+                            <label for="newSurname" class="form-label">New surname:</label>
+                            <input type="text" class="form-control form-control-sm" id="newSurname" name="newSurname"/><br/>
+                        </div>
+                    </form>
+                    <button class="btn btn-warning" id="updateUserButton">Update User</button><br/>
+                </div>
+
+                <div class="p-3 mb-3" id="resultOfUpdate"></div><br/>
+                <!--    endregion-->
+
+                <!--    region Zobrazení informací o uživateli-->
+                <div class="bg-body-tertiary rounded alt=3 p-3">
+                    <label for="showUserByID" class="form-label fs-5 fw-bolder">Show User by ID:</label>
+                    <input type="text" class="form-control form-control-sm" id="showUserByID" placeholder="Enter ID"/><br/>
+                    <button class="btn btn-info mb-3" id="showUserButton">Show User</button>
+                    <button class="btn btn-info" id="showUserButtonWithDetail">Show User With Detail</button><br/><br/>
+                </div>
+
+                <div class="p-3 mb-3" id="resultOfShowUserByID"></div><br/>
+                <!--    endregion-->
+
+                <!--    region Zobrazení informací o všech uživatelích-->
+                <div class="bg-body-tertiary rounded alt=3 p-3">
+                    <p class="text fs-5 fw-bolder">Show All Users:</p>
+                    <button class="btn btn-info mb-3" id="showUsersButton">Show Users</button>
+                    <button class="btn btn-info" id="showUsersButtonWithDetail">Show Users With Detail</button><br/><br/>
+                </div>
+
+                <div class="p-3 mb-3" id="resultOfShowUsers"></div><br/>
+                <!--    endregion-->
             </div>
         </div>
     </div>
-</div>
 
-
-<div class="container">
-    <div class="row">
-        <div class="col-3 mx-auto">
-            <!--region Vytvoření uživatele-->
-            <div class="bg-blue">
-                <form id="userForm">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name:</label>
-                        <input type="text" class="form-control form-control-sm" id="name" name="name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="surname" class="form-label">Surname:</label>
-                        <input type="text" class="form-control form-control-sm" id="surname" name="surname">
-                    </div>
-                </form>
-                <button class="btn btn-success" id="createUserButton">Register User</button><br/>
-            </div>
-
-            <div id="resultOfCreation"></div><br/>
-            <!--endregion-->
-            <!--    region Smazání uživatele-->
-            <div>
-                <label for="deleteUserID" class="form-label">Delete User by ID:</label>
-                <input type="text" class="form-control form-control-sm" id="deleteUserID" placeholder="Enter ID"/><br/>
-                <button class="btn btn-danger" id="deleteUserButton">Delete User</button><br/>
-            </div>
-
-            <div id="resultOfDeletion"></div><br/>
-            <!--endregion-->
-            <!--    region Úpravy uživatele-->
-            <div>
-                <label for="updateUserWithID" class="form-label">Update User with ID:</label>
-                <input type="text" class="form-control form-control-sm" id="updateUserWithID" placeholder="Enter ID"/><br/>
-                <form id="updateUserForm">
-                    <div class="mb-3">
-                        <label for="newName" class="form-label">New name:</label>
-                        <input type="text" class="form-control form-control-sm" id="newName" name="newName"/><br/>
-                    </div>
-                    <div class="mb-3">
-                        <label for="newSurname" class="form-label">New surname:</label>
-                        <input type="text" class="form-control form-control-sm" id="newSurname" name="newSurname"/><br/>
-                    </div>
-                </form>
-                <button class="btn btn-warning" id="updateUserButton">Update User</button><br/>
-            </div>
-
-            <div id="resultOfUpdate"></div><br/>
-            <!--    endregion-->
-
-            <!--    region Zobrazení informací o uživateli-->
-            <div>
-                <label for="showUserByID" class="form-label">Show User by ID:</label>
-                <input type="text" class="form-control form-control-sm" id="showUserByID" placeholder="Enter ID"/><br/>
-                <button class="btn btn-info" id="showUserButton">Show User</button>
-                <button class="btn btn-info" id="showUserButtonWithDetail">Show User With Detail</button><br/><br/>
-            </div>
-
-            <div id="resultOfShowUserByID"></div><br/>
-            <!--    endregion-->
-
-            <!--    region Zobrazení informací o všech uživatelích-->
-            <div>
-                <h2>Show All Users:</h2>
-                <button class="btn btn-info" id="showUsersButton">Show Users</button>
-                <button class="btn btn-info" id="showUsersButtonWithDetail">Show Users With Detail</button><br/><br/>
-            </div>
-
-            <div id="resultOfShowUsers"></div><br/>
-            <!--    endregion-->
-        </div>
-    </div>
-</div>
-
-
-
-
-
-    <!-- puvodni kod
-    <div>
-        <form id="userForm">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name"/><br/>
-
-            <label for="surname">Surname:</label>
-            <input type="text" id="surname" name="surname"/><br/>
-        </form>
-        <button id="createUserButton">Create User</button><br/>
-    </div>
-
-    <div id="resultOfCreation"></div><br/>
-    -->
-
-
-
-
-
-    <script src="js/app.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
