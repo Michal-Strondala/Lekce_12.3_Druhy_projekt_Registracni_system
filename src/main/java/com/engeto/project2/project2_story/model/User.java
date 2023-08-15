@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 public class User {
 
+    // region Atributy
     private Long ID;
     private String name;
     private String surname;
@@ -12,9 +13,10 @@ public class User {
     // UUID - Generování
     // Pro každý nový záznam musí být vygenerovaný ještě UUID, což bude další jedinečný identifikátor uživatele.
     private byte[] uuid;
+    // endregion
 
 
-
+    // region Konstruktory
     public User(Long id, String name, String surname, String personID, byte[] uuid) {
         this.ID = id;
         this.name = name;
@@ -22,7 +24,6 @@ public class User {
         this.personID = personID;
         this.uuid = uuid;  // Generování náhodného UUID
     }
-
     public User(String name, String surname, String personID) {
         this.name = name;
         this.surname = surname;
@@ -34,12 +35,14 @@ public class User {
     }
     public User() {
     }
+    // endregion
 
+
+    // region Gettery a Settery
     @JsonView(Views.Public.class)
     public Long getID() {
         return ID;
     }
-
     public void setID(Long ID) {
         this.ID = ID;
     }
@@ -47,7 +50,6 @@ public class User {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -55,11 +57,9 @@ public class User {
     public String getSurname() {
         return surname;
     }
-
     public void setSurname(String surname) {
         this.surname = surname;
     }
-
     @JsonView(Views.Public.class)
     public String getPersonID() {
         return personID;
@@ -69,16 +69,17 @@ public class User {
         if (personID.length() == 12)
             this.personID = personID;
     }
-
     @JsonView(Views.Public.class)
     public byte[] getUuid() {
         return uuid;
     }
-
     public void setUuid(byte[] uuid) {
         this.uuid = uuid;
     }
+    // endregion
 
+
+    // region metody toString
     @Override
     public String toString() {
         return "User{" +
@@ -89,4 +90,5 @@ public class User {
                 ", uuid='" + uuid + '\'' +
                 '}';
     }
+    // endregion
 }

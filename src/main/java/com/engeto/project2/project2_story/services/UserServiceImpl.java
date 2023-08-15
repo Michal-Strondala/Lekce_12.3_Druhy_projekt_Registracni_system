@@ -15,32 +15,31 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-//@Repository
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    //    založení nového uživatele
-    // UUID je generováno pomocí SQL funkce UUID_TO_BIN(UUID()) a ID je generováno a incrementováno automaticky
 
+    // region Založení nového uživatele
+    // UUID je generováno pomocí SQL funkce UUID_TO_BIN(UUID()) a ID je generováno a incrementováno automaticky
     @Override
     public int createUser(User user) {
        List<String> validPersonIDs = readValidPersonIDsFromFile();
 
        for (String personID : validPersonIDs) {
            if (personID.length() != 12)
-               continue; // PersonID length is not valid, skip to the next one
+               continue; // délka PersonID není validní, přeskoč na další krok
            if (isPersonIDInDatabase(personID))
-               continue; // PersonID is already in the database, skip to the next one
+               continue; // toto PersonID je již v databázi, přeskoč na další krok
            return jdbcTemplate.update("INSERT INTO UsersTable (name, surname, personID, uuid) VALUES(?,?,?,UUID_TO_BIN(UUID()))",
                 user.getName(), user.getSurname(), personID);
        }
-        return 0; // No valid personID found or all were already in the database
+        return 0; // Nebylo nalezeno žádné validní PersonID nebo jsou již všechny v databázi
     }
 
-    // načtení personID ze souboru personID.txt
+    // Načtení personID ze souboru personID.txt
     private List<String> readValidPersonIDsFromFile() {
         List<String> validPersonIDs = new ArrayList<>();
 
@@ -56,14 +55,17 @@ public class UserServiceImpl implements UserService {
         }
         return validPersonIDs;
     }
+
     // kontrola, jestli není personID v databázi
     private boolean isPersonIDInDatabase(String personID) {
         String sql = "SELECT COUNT(*) FROM UsersTable WHERE personID=?";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, personID);
         return count != null && count > 0;
     }
+    // endregion
 
-    //    informace o uživateli
+
+    // region Informace o uživateli
     @Override
     public Object selectUserByID(Long ID, boolean detail) {
         try {
@@ -73,7 +75,7 @@ public class UserServiceImpl implements UserService {
                 sql = "SELECT * FROM UsersTable WHERE ID=?";
                 User user = jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(User.class), ID);
                 return user;
-                // pokud chceme vypsat základní info o uživateli (tzn. pouze jméno a přijmení)
+            // pokud chceme vypsat základní info o uživateli (tzn. pouze jméno a přijmení)
             } else {
                 sql = "SELECT ID, name, surname FROM UsersTable WHERE ID=?";
                 UserNonDetailedResponse userNonDetailedResponse = jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(UserNonDetailedResponse.class), ID);
@@ -83,8 +85,10 @@ public class UserServiceImpl implements UserService {
             return null;
         }
     }
+    // endregion
 
-    //    informace o všech uživatelích
+
+    // region Informace o všech uživatelích
     @Override
     public List<Object> selectAllUsers(boolean detail) {
         String sql;
@@ -93,15 +97,17 @@ public class UserServiceImpl implements UserService {
             sql = "SELECT * FROM UsersTable";
             List<User> users = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(User.class));
             return new ArrayList<>(users);
-            // pokud chceme vypsat základní info o všech uživatelích (tzn. pouze jméno a přijmení)
+        // pokud chceme vypsat základní info o všech uživatelích (tzn. pouze jméno a přijmení)
         } else {
             sql = "SELECT ID, name, surname FROM UsersTable";
             List<UserNonDetailedResponse> usersNonDetailed = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UserNonDetailedResponse.class));
             return new ArrayList<>(usersNonDetailed);
         }
     }
+    // endregion
 
-    //    upravit informace o uživateli
+
+    // region Upravit informace o uživateli
     @Override
     public int updateUser(Object userObject) {
         if (userObject instanceof User user) {
@@ -114,14 +120,18 @@ public class UserServiceImpl implements UserService {
             return 0;
         }
     }
+    // endregion
 
-    //    smazat uživatele podle jeho ID v tabulce
+
+    // region Smazat uživatele podle jeho ID v tabulce
     @Override
     public int deleteUserByID(Long ID) {
         return jdbcTemplate.update("DELETE FROM UsersTable WHERE ID=?", ID);
     }
+    // endregion
 
-    //    najít uživatele podle jména
+
+    // region Najít uživatele podle jména
     @Override
     public List<Object> findByNameContaining(String name, boolean detail) {
         String sql;
@@ -135,4 +145,5 @@ public class UserServiceImpl implements UserService {
             return new ArrayList<>(userNonDetailedResponseByName);
         }
     }
+    // endregion
 }

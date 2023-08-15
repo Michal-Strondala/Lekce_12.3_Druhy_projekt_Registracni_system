@@ -19,13 +19,16 @@ public class MainController {
     @Autowired
     UserService userService;
 
-    // kontrola, jestli aplikace funguje
+
+    // region Kontrola, jestli aplikace funguje
     @GetMapping("/check")
     public String check() {
         return "Welcome to registration system";
     }
+    // endregion
 
-//    založení nového uživatele
+
+    // region Založení nového uživatele
     // personID musí být ověřeno, že je validní. Zde máš k dispozici soubor, ve kterém jsou po řádcích napsané validní personID
     // Dále je nutné ověřit, zda již uživatel s personID není v databázi.
     @PostMapping("/user")
@@ -40,11 +43,13 @@ public class MainController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    // endregion
 
-//    informace o uživateli
-    // ještě existuje varianta api/v1/users/{ID}?detail=true
+
+    // region Informace o uživateli
+    // existuje varianta api/v1/users/{ID}?detail=true
     // Kdy request vrátí rozšířený objekt:
-    // {id: string, name: string, surname: string, personID: string , uuid: string
+    // {id: string, name: string, surname: string, personID: string , uuid: string}
     @GetMapping("/user/{ID}")
     @JsonView(Views.Public.class)
     public ResponseEntity<Object> getUserById(@PathVariable("ID") Long ID, @RequestParam(required = false) boolean detail) {
@@ -56,11 +61,13 @@ public class MainController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    // endregion
 
-    //    informace o všech uživatelích
-    // ještě existuje varianta api/v1/users?detail=true
+
+    // region Informace o všech uživatelích
+    // existuje varianta api/v1/users?detail=true
     // Kdy request vrátí rozšířený objekt:
-    // {id: string, name: string, surname: string, personID: string , uuid: string
+    // {id: string, name: string, surname: string, personID: string , uuid: string}
     @GetMapping("/users")
     @JsonView(Views.Public.class)
     public ResponseEntity<List<Object>> getAllUsers(@RequestParam(required = false) String name, boolean detail) {
@@ -81,9 +88,11 @@ public class MainController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    // endregion
 
-    //    upravit informace o uživateli
-    // Z toho tedy je jasné, že je možné upravit pouze name a surname
+
+    // region Upravit informace o uživateli
+    // je možné upravit pouze name a surname
     @PutMapping("/user/{ID}")
     public ResponseEntity<String> updateUser(@PathVariable("ID") Long ID, @RequestBody User user, @RequestParam(required = false) boolean detail) {
         Object userToUpdateObject = userService.selectUserByID(ID, detail);
@@ -104,9 +113,10 @@ public class MainController {
             return new ResponseEntity<>("Cannot find user with ID=" + ID, HttpStatus.NOT_FOUND);
         }
     }
+    // endregion
 
 
-    //    smazat uživatele
+    // region Smazat uživatele
     @DeleteMapping("/user/{ID}")
     public ResponseEntity<String> deleteUser(@PathVariable("ID") Long ID) {
         try {
@@ -119,7 +129,5 @@ public class MainController {
             return new ResponseEntity<>("Cannot delete user.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-// dodělat detaily ze zadání
-
+    // endregion
 }
