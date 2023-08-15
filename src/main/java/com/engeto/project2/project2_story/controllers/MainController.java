@@ -16,6 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
 public class MainController {
+    // Druhý projekt Genesis Resources - Registrační systém
+    // Michal Střondala - na Discordu Michal Stř.
+
     @Autowired
     UserService userService;
 
